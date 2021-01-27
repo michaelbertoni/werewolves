@@ -2,6 +2,8 @@ package com.thynkio.werewolvesserver.game;
 
 import com.thynkio.werewolvesserver.game.exceptions.*;
 import lombok.Getter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -9,6 +11,8 @@ import java.util.stream.Collectors;
 
 @Getter
 public class WerewolvesGame {
+    private static final Logger logger = LoggerFactory.getLogger(WerewolvesGame.class);
+
     private final String id;
     private final Map<String, Player> players;
     private boolean started;
@@ -30,22 +34,28 @@ public class WerewolvesGame {
             throw new GameAlreadyStartedException(id);
         }
 
+        logger.info("Werewolf game " + id + " starting");
+
+        winner = null;
         assignRoleToPlayers();
         initializeNightPhase();
-        winner = null;
         started = true;
+
+        logger.info("Werewolf game " + id + " started");
     }
 
     private void initializeNightPhase() {
         phase = Phase.NIGHT;
         voteCount = new HashMap<>();
         getAliveVillagerNicknames().forEach(villagerNickname -> voteCount.put(villagerNickname, 0));
+        logger.info("Werewolf game " + id + ": night phase started");
     }
 
     private void initializeDayPhase() {
         phase = Phase.DAY;
         voteCount = new HashMap<>();
         getAlivePlayerNicknames().forEach(playerNickname -> voteCount.put(playerNickname, 0));
+        logger.info("Werewolf game " + id + ": day phase started");
     }
 
     private void assignRoleToPlayers() {
@@ -58,7 +68,11 @@ public class WerewolvesGame {
         }
         while (countAliveWerewolves() < numberOfWerewolves) {
             String randomPlayerNickname = playerNicknames.get(ThreadLocalRandom.current().nextInt(0, players.size()));
+            if (players.get(randomPlayerNickname).isWerewolf()) {
+                continue;
+            }
             players.get(randomPlayerNickname).setRole(Role.WEREWOLF);
+            logger.info("Werewolf game " + id + ": " + randomPlayerNickname + " is a werewolf");
         }
     }
 
@@ -66,7 +80,8 @@ public class WerewolvesGame {
         if (players.containsKey(nickname)) {
             throw new PlayersWithIdenticalNicknameException(id);
         }
-        players.put(nickname, new Player(nickname));
+        players.put(nickname, new Player(nickname, id));
+        logger.info("Werewolf game " + id + ": " + nickname + " is added to the game");
     }
 
     public void removePlayer(String nickname) throws GameException {
@@ -74,6 +89,7 @@ public class WerewolvesGame {
             throw new PlayerNotFoundForRemovalException(id);
         }
         players.remove(nickname);
+        logger.info("Werewolf game " + id + ": " + nickname + " is removed from the game");
     }
 
     public void vote(String voterNickname, String votedNickname) throws GameException {
@@ -107,8 +123,10 @@ public class WerewolvesGame {
 
         int currentVoteCountForVoted = voteCount.get(votedNickname);
         voteCount.put(votedNickname, ++currentVoteCountForVoted);
+        logger.info("Werewolf game " + id + ": " + voterNickname + " voted to kill " + votedNickname);
 
         if (checkVoteCountEnd()) {
+            logger.info("Werewolf game " + id + ": all players voted, computing results");
             endVote();
         }
     }
@@ -137,6 +155,9 @@ public class WerewolvesGame {
         String electedPlayerNickname = findElectedPlayerForElimination();
         if (!electedPlayerNickname.isEmpty()) {
             players.get(electedPlayerNickname).kill();
+            logger.info("Werewolf game " + id + ": " + electedPlayerNickname + " was killed");
+        } else {
+            logger.info("Werewolf game " + id + ": draw, no player gets killed");
         }
         if (checkEndgame()) {
             endGame();
@@ -155,10 +176,12 @@ public class WerewolvesGame {
     private boolean checkEndgame() {
         if (countAliveWerewolves() == countAliveVillagers()) {
             winner = Role.WEREWOLF;
+            logger.info("Werewolf game " + id + ": werewolves won the game");
             return true;
         }
         if (countAliveWerewolves() == 0) {
             winner = Role.VILLAGER;
+            logger.info("Werewolf game " + id + ": villagers won the game");
             return true;
         }
         return false;
@@ -166,6 +189,7 @@ public class WerewolvesGame {
 
     private void endGame() {
         started = false;
+        logger.info("Werewolf game " + id + ": game ended");
     }
 
     private String findElectedPlayerForElimination() {

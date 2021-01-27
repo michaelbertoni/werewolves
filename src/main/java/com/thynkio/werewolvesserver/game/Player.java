@@ -3,17 +3,16 @@ package com.thynkio.werewolvesserver.game;
 import lombok.Getter;
 
 import java.util.Objects;
-import java.util.UUID;
 
 @Getter
 public class Player {
-    private String nickname;
-    private final String id;
+    private final String nickname;
+    private final String gameId;
     private Role role;
     private boolean alive;
 
-    public Player(String nickname) {
-        this.id = UUID.randomUUID().toString();
+    public Player(String nickname, String  gameId) {
+        this.gameId = gameId;
         this.nickname = nickname;
         this.role = Role.VILLAGER;
         this.alive = true;
@@ -44,11 +43,11 @@ public class Player {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Player player = (Player) o;
-        return Objects.equals(nickname, player.nickname);
+        return nickname.equals(player.nickname) && gameId.equals(player.gameId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(nickname);
+        return Objects.hash(nickname, gameId);
     }
 }

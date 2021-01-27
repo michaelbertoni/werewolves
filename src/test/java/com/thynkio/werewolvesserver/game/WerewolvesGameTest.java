@@ -24,7 +24,7 @@ public class WerewolvesGameTest {
         WerewolvesGame game = new WerewolvesGame();
         game.addPlayer("Paul");
         Map<String, Player> playerHashMap = new HashMap<>();
-        playerHashMap.put("Paul", new Player("Paul"));
+        playerHashMap.put("Paul", new Player("Paul", game.getId()));
         assertEquals(playerHashMap, game.getPlayers());
     }
 
@@ -35,7 +35,7 @@ public class WerewolvesGameTest {
         game.addPlayer("Eric");
         game.removePlayer("Paul");
         Map<String, Player> playerHashMap = new HashMap<>();
-        playerHashMap.put("Eric", new Player("Eric"));
+        playerHashMap.put("Eric", new Player("Eric", game.getId()));
         assertEquals(playerHashMap, game.getPlayers());
     }
 
@@ -46,8 +46,8 @@ public class WerewolvesGameTest {
         game.addPlayer("Eric");
         assertThrows(PlayerNotFoundForRemovalException.class, () -> game.removePlayer("George"));
         Map<String, Player> playerHashMap = new HashMap<>();
-        playerHashMap.put("Paul", new Player("Paul"));
-        playerHashMap.put("Eric", new Player("Eric"));
+        playerHashMap.put("Paul", new Player("Paul", game.getId()));
+        playerHashMap.put("Eric", new Player("Eric", game.getId()));
         assertEquals(playerHashMap, game.getPlayers());
     }
 
@@ -225,9 +225,8 @@ public class WerewolvesGameTest {
         WerewolvesGame game = startNewGameWithFixedAmountOfPlayers(8);
         List<String> werewolvesNicknames = game.getAliveWerewolvesNicknames();
         List<String> villagersNicknames = game.getAliveVillagerNicknames();
-        for (String werewolfNickname : werewolvesNicknames) {
-            game.vote(werewolfNickname, villagersNicknames.get(0));
-        }
+        game.vote(werewolvesNicknames.get(0), villagersNicknames.get(0));
+        game.vote(werewolvesNicknames.get(1), villagersNicknames.get(0));
         assertFalse(game.getPlayers().get(villagersNicknames.get(0)).isAlive());
     }
 
