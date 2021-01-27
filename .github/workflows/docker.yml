@@ -18,7 +18,7 @@ jobs:
         id: docker_meta
         uses: crazy-max/ghaction-docker-meta@v1
         with:
-          images: michaelbertoni/werewolves/werewolves-server
+          images: docker.pkg.github.com/michaelbertoni/werewolves/werewolves-server
           tag-sha: true
           tag-latest: true
 
