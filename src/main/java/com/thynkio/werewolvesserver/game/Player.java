@@ -9,10 +9,20 @@ import java.util.UUID;
 public class Player {
     private String nickname;
     private final String id;
+    private Role role;
 
     public Player(String nickname) {
         this.id = UUID.randomUUID().toString();
         this.nickname = nickname;
+        this.role = Role.VILLAGER;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     @Override
