@@ -20,6 +20,7 @@ jobs:
         with:
           images: michaelbertoni/werewolves/werewolves-server
           tag-sha: true
+          tag-latest: true
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
