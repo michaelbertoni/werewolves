@@ -1,10 +1,10 @@
 # build stage build the jar with all our resources
-FROM openjdk:15-jdk as build
+FROM adoptopenjdk:15-hotspot as build
 
 WORKDIR /
 ADD . .
 
-RUN ./mvnw -B package
+RUN chmod +x /mvnw && ./mvnw -B package
 RUN mv /target/*.jar /app.jar
 
 # package stage
