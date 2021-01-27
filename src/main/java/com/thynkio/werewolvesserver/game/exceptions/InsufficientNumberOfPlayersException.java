@@ -7,6 +7,6 @@ public class InsufficientNumberOfPlayersException extends GameException {
 
     @Override
     public String getMessage() {
-        return "The game needs at least 3 players to start.";
+        return "The game needs at least 4 players to start.";
     }
 }

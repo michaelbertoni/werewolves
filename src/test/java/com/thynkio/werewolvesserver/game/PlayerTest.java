@@ -20,4 +20,12 @@ public class PlayerTest {
         assertNotNull(player.getId());
         assertNotEquals(player.getId(), player2.getId());
     }
+
+    @Test
+    void testEqualsAndHashcode() {
+        Player player1 = new Player("Eric");
+        Player player2 = new Player("Eric");
+        assertTrue(player1.equals(player2) && player2.equals(player1));
+        assertEquals(player2.hashCode(), player1.hashCode());
+    }
 }
