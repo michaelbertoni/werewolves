@@ -209,6 +209,18 @@ public class WerewolvesGameTest {
     }
 
     @Test
+    void voteCountDoesNotEndIfPhaseIsUnknown() throws GameException {
+        WerewolvesGame game = startNewGameWithFixedAmountOfPlayers(4);
+        game.setPhase(Phase.BUG);
+        List<String> werewolvesNicknames = game.getAliveWerewolvesNicknames();
+        List<String> villagersNicknames = game.getAliveVillagerNicknames();
+        for (String werewolfNickname : werewolvesNicknames) {
+            game.vote(werewolfNickname, villagersNicknames.get(0));
+        }
+        assertNotEquals(Phase.DAY, game.getPhase());
+    }
+
+    @Test
     void electedPlayerIsKilledByWerewolvesDuringTheNight() throws GameException {
         WerewolvesGame game = startNewGameWithFixedAmountOfPlayers(8);
         List<String> werewolvesNicknames = game.getAliveWerewolvesNicknames();

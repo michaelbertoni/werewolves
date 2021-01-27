@@ -13,8 +13,8 @@ public class WerewolvesGame {
     private final Map<String, Player> players;
     private boolean started;
     private Role winner;
-    private Phase phase;
-    private Map<String, Integer> voteCount;
+    private Phase phase = Phase.NIGHT;
+    private Map<String, Integer> voteCount = new HashMap<>();
 
     public WerewolvesGame() {
         this.id = UUID.randomUUID().toString();
@@ -238,5 +238,9 @@ public class WerewolvesGame {
                 .filter(Player::isAlive)
                 .map(Player::getNickname)
                 .collect(Collectors.toList());
+    }
+
+    public void setPhase(Phase phase) {
+        this.phase = phase;
     }
 }
