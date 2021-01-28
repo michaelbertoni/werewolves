@@ -1,4 +1,4 @@
-package com.thynkio.werewolvesserver.game;
+package com.thynkio.werewolvesserver.domain;
 
 public enum Phase {
     DAY,

@@ -1,4 +1,4 @@
-package com.thynkio.werewolvesserver.game.exceptions;
+package com.thynkio.werewolvesserver.domain.exceptions;
 
 public class VillagerVoteDuringNightException extends GameException {
     public VillagerVoteDuringNightException(String id) {

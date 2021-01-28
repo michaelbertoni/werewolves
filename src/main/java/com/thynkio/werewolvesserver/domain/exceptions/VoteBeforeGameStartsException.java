@@ -1,4 +1,4 @@
-package com.thynkio.werewolvesserver.game.exceptions;
+package com.thynkio.werewolvesserver.domain.exceptions;
 
 public class VoteBeforeGameStartsException extends GameException {
     public VoteBeforeGameStartsException(String gameId) {
