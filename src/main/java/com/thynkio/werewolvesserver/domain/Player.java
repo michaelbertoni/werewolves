@@ -1,10 +1,14 @@
 package com.thynkio.werewolvesserver.domain;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Objects;
 
 @Getter
+@Setter
+@AllArgsConstructor
 public class Player implements Comparable<Player> {
     private final String nickname;
     private Role role;
@@ -15,10 +19,6 @@ public class Player implements Comparable<Player> {
         this.nickname = nickname;
         this.role = Role.VILLAGER;
         this.alive = true;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
     }
 
     public void kill() {

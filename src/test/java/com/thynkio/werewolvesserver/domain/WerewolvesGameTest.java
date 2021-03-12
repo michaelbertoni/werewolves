@@ -3,9 +3,7 @@ package com.thynkio.werewolvesserver.domain;
 import com.thynkio.werewolvesserver.domain.exceptions.*;
 import org.junit.jupiter.api.Test;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;

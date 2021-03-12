@@ -1,7 +1,9 @@
 package com.thynkio.werewolvesserver.domain;
 
 import com.thynkio.werewolvesserver.domain.exceptions.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,6 +11,8 @@ import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Getter
+@Setter
+@AllArgsConstructor
 public class WerewolvesGame {
     private static final Logger logger = LoggerFactory.getLogger(WerewolvesGame.class);
 

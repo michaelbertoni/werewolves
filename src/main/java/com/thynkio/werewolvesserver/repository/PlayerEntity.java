@@ -1,13 +1,11 @@
 package com.thynkio.werewolvesserver.repository;
 
 import com.thynkio.werewolvesserver.domain.Role;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 @Entity
@@ -15,9 +13,11 @@ import javax.persistence.ManyToOne;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode
 public class PlayerEntity {
 
     @ManyToOne
+    @JoinColumn(name="game_id")
     private WerewolvesGameEntity game;
 
     @Id
