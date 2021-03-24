@@ -3,6 +3,7 @@ package com.thynkio.werewolvesserver.domain;
 import com.thynkio.werewolvesserver.domain.exceptions.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,19 +13,24 @@ import java.util.concurrent.ThreadLocalRandom;
 
 @Getter
 @Setter
-@AllArgsConstructor
+@NoArgsConstructor
 public class WerewolvesGame {
     private static final Logger logger = LoggerFactory.getLogger(WerewolvesGame.class);
 
-    private final String id;
-    private final List<Player> players;
+    private String id;
+    private List<Player> players;
     private boolean started;
     private Role winner;
     private Phase phase = Phase.NIGHT;
 
-    public WerewolvesGame() {
-        this.id = UUID.randomUUID().toString();
-        this.players = new ArrayList<>();
+    private WerewolvesGame(String id, List<Player> players) {
+        this.id = id;
+        this.players = players;
+    }
+
+    public static WerewolvesGame createGame() {
+        WerewolvesGame newGame = new WerewolvesGame(UUID.randomUUID().toString(), new ArrayList<>());
+        return newGame;
     }
 
     public void start() throws GameException {

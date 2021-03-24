@@ -1,16 +1,16 @@
 package com.thynkio.werewolvesserver.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Objects;
 
 @Getter
 @Setter
-@AllArgsConstructor
+@NoArgsConstructor
 public class Player implements Comparable<Player> {
-    private final String nickname;
+    private String nickname;
     private Role role;
     private boolean alive;
     private int votedAgainst;

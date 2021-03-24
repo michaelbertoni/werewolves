@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-@Entity
+@Entity(name = "player")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -17,7 +17,7 @@ import javax.persistence.ManyToOne;
 public class PlayerEntity {
 
     @ManyToOne
-    @JoinColumn(name="game_id")
+    @JoinColumn(name="game_id", referencedColumnName = "id")
     private WerewolvesGameEntity game;
 
     @Id

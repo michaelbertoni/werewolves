@@ -12,15 +12,15 @@ class WerewolvesGameTest {
 
     @Test
     void gameHasAnUniqueId() {
-        WerewolvesGame game = new WerewolvesGame();
-        WerewolvesGame game2 = new WerewolvesGame();
+        WerewolvesGame game = WerewolvesGame.createGame();
+        WerewolvesGame game2 = WerewolvesGame.createGame();
         assertNotNull(game.getId());
         assertNotEquals(game.getId(), game2.getId());
     }
 
     @Test
     void gameHasNewPlayerAdded() throws GameException {
-        WerewolvesGame game = new WerewolvesGame();
+        WerewolvesGame game = WerewolvesGame.createGame();
         game.addPlayer("Paul");
         List<Player> playerList = List.of(new Player("Paul"));
         assertEquals(playerList, game.getPlayers());
@@ -28,7 +28,7 @@ class WerewolvesGameTest {
 
     @Test
     void gameHasPlayerRemoved() throws GameException {
-        WerewolvesGame game = new WerewolvesGame();
+        WerewolvesGame game = WerewolvesGame.createGame();
         game.addPlayer("Paul");
         game.addPlayer("Eric");
         game.removePlayer("Paul");
@@ -38,7 +38,7 @@ class WerewolvesGameTest {
 
     @Test
     void gameCannotRemoveUnknownPlayer() throws GameException {
-        WerewolvesGame game = new WerewolvesGame();
+        WerewolvesGame game = WerewolvesGame.createGame();
         game.addPlayer("Paul");
         game.addPlayer("Eric");
         assertThrows(PlayerNotFoundForRemovalException.class, () -> game.removePlayer("George"));
@@ -48,7 +48,7 @@ class WerewolvesGameTest {
 
     @Test
     void gameCannotStartWithoutFourPlayers() throws GameException {
-        WerewolvesGame game = new WerewolvesGame();
+        WerewolvesGame game = WerewolvesGame.createGame();
         assertThrows(InsufficientNumberOfPlayersException.class, game::start);
         addPlayersToGame(2, game);
         assertThrows(InsufficientNumberOfPlayersException.class, game::start);
@@ -66,7 +66,7 @@ class WerewolvesGameTest {
 
     @Test
     void cannotAddPlayerWithExistingNicknameInGame() {
-        WerewolvesGame game = new WerewolvesGame();
+        WerewolvesGame game = WerewolvesGame.createGame();
         assertThrows(PlayersWithIdenticalNicknameException.class, () -> {
             game.addPlayer("nickname");
             game.addPlayer("nickname");
@@ -117,7 +117,7 @@ class WerewolvesGameTest {
 
     @Test
     void nobodyCanVoteIfTheGameHasNotStarted() throws GameException {
-        WerewolvesGame game = new WerewolvesGame();
+        WerewolvesGame game = WerewolvesGame.createGame();
         game.addPlayer("nickname1");
         game.addPlayer("nickname3");
         assertThrows(VoteBeforeGameStartsException.class, () -> game.vote("nickname1", "nickname3"));
@@ -309,7 +309,7 @@ class WerewolvesGameTest {
     }
 
     private WerewolvesGame startNewGameWithFixedAmountOfPlayers(int amountOfPlayers) throws GameException {
-        WerewolvesGame game = new WerewolvesGame();
+        WerewolvesGame game = WerewolvesGame.createGame();
         addPlayersToGame(amountOfPlayers, game);
         game.start();
         return game;

@@ -30,13 +30,13 @@ class WerewolfGameControllerTest {
     @Test
     public void givenPostGame_returnString() throws Exception {
         // given
-        WerewolvesGame werewolvesGame = new WerewolvesGame();
+        WerewolvesGame werewolvesGame = WerewolvesGame.createGame();
 
         // when
         Mockito.when(werewolvesGameService.createGame()).thenReturn(werewolvesGame.getId());
         MvcResult result = mvc.perform(post("/game")
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andReturn();
 
         // then

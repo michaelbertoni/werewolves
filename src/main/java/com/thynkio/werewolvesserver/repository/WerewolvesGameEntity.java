@@ -7,7 +7,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.util.List;
 
-@Entity
+@Entity(name = "game")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -17,7 +17,7 @@ public class WerewolvesGameEntity {
     @Id
     private String id;
 
-    @OneToMany(targetEntity = PlayerEntity.class, mappedBy = "game", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(targetEntity = PlayerEntity.class, mappedBy = "game", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<PlayerEntity> players;
 
     private boolean started;
