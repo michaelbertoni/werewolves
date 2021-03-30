@@ -1,10 +1,13 @@
 package com.thynkio.werewolvesserver.rest;
 
+import com.thynkio.werewolvesserver.domain.WerewolvesGame;
 import com.thynkio.werewolvesserver.domain.exceptions.GameException;
 import com.thynkio.werewolvesserver.service.WerewolvesGameService;
+import com.thynkio.werewolvesserver.service.dto.WerewolvesGameDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.WebRequest;
 
 @RestController
 public class WerewolvesGameController {
@@ -35,8 +38,9 @@ public class WerewolvesGameController {
      */
     @PostMapping("/join")
     public @ResponseBody
-    ResponseEntity<Boolean> joinGame(@RequestParam String playerName, @RequestParam String gameId) throws GameException {
-        return new ResponseEntity<>(this.werewolvesGameService.joinGame(playerName, gameId), HttpStatus.OK);
+    ResponseEntity<Void> joinGame(@RequestParam String playerName, @RequestParam String gameId) throws GameException {
+        this.werewolvesGameService.joinGame(playerName, gameId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     /**
@@ -44,12 +48,24 @@ public class WerewolvesGameController {
      *
      * @param playerName the existing player nickname
      * @param gameId     the game id of the existing joined game
-     * @return game isStarted boolean
      */
     @PostMapping("/leave")
     public @ResponseBody
     ResponseEntity<Void> leaveGame(@RequestParam String playerName, @RequestParam String gameId) throws GameException {
         this.werewolvesGameService.leaveGame(playerName, gameId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    /**
+     * Starts a werewolves game
+     *
+     * @param playerName the existing player nickname requesting
+     * @param gameId     the game id of the existing joined game
+     */
+    @PostMapping("/start")
+    public @ResponseBody
+    ResponseEntity<Void> startGame(@RequestParam String playerName, @RequestParam String gameId) throws GameException {
+        this.werewolvesGameService.startGame(playerName, gameId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -63,7 +79,21 @@ public class WerewolvesGameController {
      */
     @PostMapping("/vote")
     public @ResponseBody
-    ResponseEntity<String> vote(@RequestParam String voterNickname, @RequestParam String votedNickname, @RequestParam String gameId) throws GameException {
-        return new ResponseEntity<>(this.werewolvesGameService.vote(voterNickname, votedNickname, gameId), HttpStatus.OK);
+    ResponseEntity<Void> vote(@RequestParam String voterNickname, @RequestParam String votedNickname, @RequestParam String gameId) throws GameException {
+        this.werewolvesGameService.vote(voterNickname, votedNickname, gameId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    /**
+     * Retrieve status of the game
+     *
+     * @param gameId the existing game id
+     * @param playerName the nickname of the player requesting status
+     * @return a JSON representation of the werewolves game
+     */
+    @GetMapping("/status")
+    public @ResponseBody
+    ResponseEntity<WerewolvesGameDTO> getStatus(@RequestParam String gameId, @RequestParam String playerName) throws GameException {
+        return new ResponseEntity<>(this.werewolvesGameService.getStatus(gameId, playerName), HttpStatus.OK);
     }
 }

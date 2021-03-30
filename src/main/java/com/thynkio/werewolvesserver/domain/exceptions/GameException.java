@@ -1,6 +1,6 @@
 package com.thynkio.werewolvesserver.domain.exceptions;
 
-public class GameException extends Throwable {
+public class GameException extends RuntimeException {
 
     private String gameId;
 

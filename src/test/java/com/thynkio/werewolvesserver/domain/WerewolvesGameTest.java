@@ -41,7 +41,7 @@ class WerewolvesGameTest {
         WerewolvesGame game = WerewolvesGame.createGame();
         game.addPlayer("Paul");
         game.addPlayer("Eric");
-        assertThrows(PlayerNotFoundForRemovalException.class, () -> game.removePlayer("George"));
+        assertThrows(PlayerNotFoundInGameException.class, () -> game.removePlayer("George"));
         List<Player> playerList = List.of(new Player("Paul"), new Player("Eric"));
         assertEquals(playerList, game.getPlayers());
     }

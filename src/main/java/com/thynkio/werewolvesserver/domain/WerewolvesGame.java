@@ -1,7 +1,6 @@
 package com.thynkio.werewolvesserver.domain;
 
 import com.thynkio.werewolvesserver.domain.exceptions.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -29,8 +28,7 @@ public class WerewolvesGame {
     }
 
     public static WerewolvesGame createGame() {
-        WerewolvesGame newGame = new WerewolvesGame(UUID.randomUUID().toString(), new ArrayList<>());
-        return newGame;
+        return new WerewolvesGame(UUID.randomUUID().toString(), new ArrayList<>());
     }
 
     public void start() throws GameException {
@@ -94,7 +92,7 @@ public class WerewolvesGame {
 
     public void removePlayer(String nickname) throws GameException {
         if (getPlayerFromNickname(nickname).isEmpty()) {
-            throw new PlayerNotFoundForRemovalException(id);
+            throw new PlayerNotFoundInGameException(id);
         }
         players.removeIf(player -> player.getNickname().equals(nickname));
         logger.info("Werewolf game " + id + ": " + nickname + " is removed from the game");
