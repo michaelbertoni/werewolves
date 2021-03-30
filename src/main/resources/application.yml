@@ -1,0 +1,19 @@
+spring:
+  h2:
+    console:
+      enabled: true
+  datasource:
+    driverClassName: org.h2.Driver
+    url: jdbc:h2:mem:test;MODE=PostgreSQL
+
+---
+
+spring:
+  datasource:
+    url: jdbc:postgresql://${POSTGRESQL_HOSTNAME:localhost}/werewolves
+    username: ${POSTGRESQL_USERNAME:root}
+    password: ${POSTGRESQL_PASSWORD:passwd}
+    driverClassName: org.postgresql.Driver
+  config:
+    activate:
+      on-profile: production
