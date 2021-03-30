@@ -46,7 +46,7 @@ class WerewolfGameServiceTest {
     private ArgumentCaptor<WerewolvesGameEntity> werewolvesGameEntityArgumentCaptor;
 
     @Test
-    public void whenCreateGame_gameIdIsReturned() {
+    public void whenCreateGame_gameIdIsReturned() throws Exception {
         // given
 
         // when
@@ -58,7 +58,7 @@ class WerewolfGameServiceTest {
     }
 
     @Test
-    public void whenJoinGame_gameStatusIsReturned() throws GameException {
+    public void whenJoinGame_gameStatusIsReturned() throws Exception {
         // given
         WerewolvesGame game = WerewolvesGame.createGame();
         WerewolvesGameEntity gameEntity = modelMapper.map(game, WerewolvesGameEntity.class);
@@ -127,7 +127,7 @@ class WerewolfGameServiceTest {
     }
 
     @Test
-    public void whenPlayerStartsGame_gameIsStarted() throws GameException {
+    public void whenPlayerStartsGame_gameIsStarted() throws Exception {
         // given
         WerewolvesGame game = createGameWith9Players();
         WerewolvesGameEntity gameEntity = modelMapper.map(game, WerewolvesGameEntity.class);
@@ -157,7 +157,7 @@ class WerewolfGameServiceTest {
     }
 
     @Test
-    public void whenPlayerVote_voteIsCountedAndPhaseReturned() throws GameException {
+    public void whenPlayerVote_voteIsCountedAndPhaseReturned() throws Exception {
         // given
         WerewolvesGame game = createGameWith9Players();
         game.start();
@@ -177,7 +177,7 @@ class WerewolfGameServiceTest {
     }
 
     @Test
-    public void whenPlayerGetStatus_DTOisReturned() throws GameException {
+    public void whenPlayerGetStatus_DTOisReturned() throws Exception {
         // given
         WerewolvesGame game = createGameWith9Players();
         game.start();
@@ -208,7 +208,7 @@ class WerewolfGameServiceTest {
     }
 
     @Test
-    public void whenVillagerPlayerGetStatus_AllPlayerInDTOAreVillagers() throws GameException {
+    public void whenVillagerPlayerGetStatus_AllPlayerInDTOAreVillagers() throws Exception {
         // given
         WerewolvesGame game = createGameWith9Players();
         game.start();
@@ -229,7 +229,7 @@ class WerewolfGameServiceTest {
     }
 
     @Test
-    public void whenVillagerPlayerGetStatusAtNightPhase_VillagerCannotSeeWerewolvesVotes() throws GameException {
+    public void whenVillagerPlayerGetStatusAtNightPhase_VillagerCannotSeeWerewolvesVotes() throws Exception {
         // given
         WerewolvesGame game = createGameWith9Players();
         game.start();

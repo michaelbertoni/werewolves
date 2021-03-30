@@ -2,7 +2,7 @@ package com.thynkio.werewolvesserver.domain.exceptions;
 
 public class GameException extends RuntimeException {
 
-    private String gameId;
+    private final String gameId;
 
     public GameException(String gameId) {
         this.gameId = gameId;

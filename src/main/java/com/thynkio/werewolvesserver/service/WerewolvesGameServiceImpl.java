@@ -11,6 +11,8 @@ import com.thynkio.werewolvesserver.repository.WerewolvesGameRepository;
 import com.thynkio.werewolvesserver.service.dto.WerewolvesGameDTO;
 import com.thynkio.werewolvesserver.service.exceptions.GameNotFoundException;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -18,6 +20,8 @@ import java.util.Optional;
 
 @Service
 public class WerewolvesGameServiceImpl implements WerewolvesGameService {
+
+    private static final Logger logger = LoggerFactory.getLogger(WerewolvesGameServiceImpl.class);
 
     private final ModelMapper modelMapper;
     private final WerewolvesGameRepository werewolvesGameRepository;
@@ -33,10 +37,15 @@ public class WerewolvesGameServiceImpl implements WerewolvesGameService {
      * @return gameId
      */
     @Transactional
-    public String createGame() {
-        WerewolvesGame newGame = WerewolvesGame.createGame();
-        saveGame(newGame);
-        return newGame.getId();
+    public String createGame() throws Exception {
+        try {
+            logger.info("Creating new game");
+            WerewolvesGame newGame = WerewolvesGame.createGame();
+            saveGame(newGame);
+            return newGame.getId();
+        } catch (Exception e) {
+            return handleExceptions(e);
+        }
     }
 
     /**
@@ -46,10 +55,15 @@ public class WerewolvesGameServiceImpl implements WerewolvesGameService {
      * @param gameId
      */
     @Transactional
-    public void joinGame(String playerName, String gameId) throws GameException {
-        WerewolvesGame game = getWerewolvesGame(gameId);
-        game.addPlayer(playerName);
-        saveGame(game);
+    public void joinGame(String playerName, String gameId) throws Exception {
+        try {
+            logger.info(String.format("Player %s joins game %s", playerName, gameId));
+            WerewolvesGame game = getWerewolvesGame(gameId);
+            game.addPlayer(playerName);
+            saveGame(game);
+        } catch (Exception e) {
+            handleExceptions(e);
+        }
     }
 
     /**
@@ -59,10 +73,15 @@ public class WerewolvesGameServiceImpl implements WerewolvesGameService {
      * @param gameId
      */
     @Transactional
-    public void leaveGame(String playerName, String gameId) throws GameException {
-        WerewolvesGame game = getWerewolvesGame(gameId);
-        game.removePlayer(playerName);
-        saveGame(game);
+    public void leaveGame(String playerName, String gameId) throws Exception {
+        try {
+            logger.info(String.format("Player %s leaves game %s", playerName, gameId));
+            WerewolvesGame game = getWerewolvesGame(gameId);
+            game.removePlayer(playerName);
+            saveGame(game);
+        } catch (Exception e) {
+            handleExceptions(e);
+        }
     }
 
     /**
@@ -72,14 +91,19 @@ public class WerewolvesGameServiceImpl implements WerewolvesGameService {
      * @param gameId
      */
     @Override
-    public void startGame(String playerName, String gameId) throws GameException {
-        WerewolvesGame game = getWerewolvesGame(gameId);
-        Optional<Player> playerOptional = game.getPlayerFromNickname(playerName);
-        if (playerOptional.isEmpty()) {
-            throw new PlayerNotFoundInGameException(gameId);
+    public void startGame(String playerName, String gameId) throws Exception {
+        try {
+            logger.info(String.format("Player %s starts game %s", playerName, gameId));
+            WerewolvesGame game = getWerewolvesGame(gameId);
+            Optional<Player> playerOptional = game.getPlayerFromNickname(playerName);
+            if (playerOptional.isEmpty()) {
+                throw new PlayerNotFoundInGameException(gameId);
+            }
+            game.start();
+            saveGame(game);
+        } catch (Exception e) {
+            handleExceptions(e);
         }
-        game.start();
-        saveGame(game);
     }
 
     /**
@@ -90,10 +114,15 @@ public class WerewolvesGameServiceImpl implements WerewolvesGameService {
      * @param gameId
      */
     @Transactional
-    public void vote(String voterNickname, String votedNickname, String gameId) throws GameException {
-        WerewolvesGame game = getWerewolvesGame(gameId);
-        game.vote(voterNickname, votedNickname);
-        saveGame(game);
+    public void vote(String voterNickname, String votedNickname, String gameId) throws Exception {
+        try {
+            logger.info(String.format("Player %s votes against %s in game %s", voterNickname, votedNickname, gameId));
+            WerewolvesGame game = getWerewolvesGame(gameId);
+            game.vote(voterNickname, votedNickname);
+            saveGame(game);
+        } catch (Exception e) {
+            handleExceptions(e);
+        }
     }
 
     /**
@@ -104,21 +133,27 @@ public class WerewolvesGameServiceImpl implements WerewolvesGameService {
      * @return game status as Object
      */
     @Override
-    public WerewolvesGameDTO getStatus(String gameId, String nickname) throws GameException {
-        WerewolvesGame game = getWerewolvesGame(gameId);
-        if (game.getPlayerFromNickname(nickname).isEmpty()) {
-            throw new PlayerNotFoundInGameException(gameId);
-        }
-        WerewolvesGameDTO gameDTO = modelMapper.map(game, WerewolvesGameDTO.class);
-        // if player role is not werewolf, show all players as villagers
-        if (game.getPlayerFromNickname(nickname).get().isVillager()) {
-            gameDTO.getPlayers().forEach(playerDTO -> playerDTO.setRole(Role.VILLAGER));
-            // if phase is night, don't show werewolves votes
-            if (game.getPhase().equals(Phase.NIGHT)) {
-                gameDTO.getPlayers().forEach(playerDTO -> playerDTO.setVotedAgainst(0));
+    public WerewolvesGameDTO getStatus(String gameId, String nickname) throws Exception {
+        try {
+            logger.info(String.format("Player %s retrieves status of game %s", nickname, gameId));
+            WerewolvesGame game = getWerewolvesGame(gameId);
+            if (game.getPlayerFromNickname(nickname).isEmpty()) {
+                throw new PlayerNotFoundInGameException(gameId);
             }
+            WerewolvesGameDTO gameDTO = modelMapper.map(game, WerewolvesGameDTO.class);
+            // if player role is not werewolf, show all players as villagers
+            if (game.getPlayerFromNickname(nickname).get().isVillager()) {
+                gameDTO.getPlayers().forEach(playerDTO -> playerDTO.setRole(Role.VILLAGER));
+                // if phase is night, don't show werewolves votes
+                if (game.getPhase().equals(Phase.NIGHT)) {
+                    gameDTO.getPlayers().forEach(playerDTO -> playerDTO.setVotedAgainst(0));
+                }
+            }
+            return gameDTO;
+        } catch (Exception e) {
+            handleExceptions(e);
         }
-        return gameDTO;
+        return null;
     }
 
     private WerewolvesGame getWerewolvesGame(String gameId) {
@@ -130,7 +165,19 @@ public class WerewolvesGameServiceImpl implements WerewolvesGameService {
     }
 
     private void saveGame(WerewolvesGame game) {
-        this.werewolvesGameRepository.save(modelMapper.map(game, WerewolvesGameEntity.class));
+        WerewolvesGameEntity updatedGameEntity = modelMapper.map(game, WerewolvesGameEntity.class);
+        updatedGameEntity.getPlayers().forEach(playerEntity -> playerEntity.setGame(updatedGameEntity));
+        this.werewolvesGameRepository.save(updatedGameEntity);
+        logger.info(String.format("Werewolf game %s modifications persisted", game.getId()));
+    }
+
+    private String handleExceptions(Exception e) throws Exception {
+        if (e instanceof GameException) {
+            logger.info(e.getLocalizedMessage(), e);
+        } else {
+            logger.error("An unknown exception was thrown", e);
+        }
+        throw e;
     }
 
 }

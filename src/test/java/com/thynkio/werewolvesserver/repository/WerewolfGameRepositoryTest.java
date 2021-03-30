@@ -25,15 +25,16 @@ class WerewolfGameRepositoryTest {
     @Test
     public void whenCreateGame_gameIsPersistedWithPlayer() {
         // given
+        WerewolvesGameEntity werewolvesGameEntity = new WerewolvesGameEntity();
+        werewolvesGameEntity.setId("testGame");
+        werewolvesGameEntity.setStarted(false);
+        werewolvesGameEntity.setWinner(Role.WEREWOLF);
         PlayerEntity playerEntity = new PlayerEntity();
         playerEntity.setNickname("testPlayer");
         playerEntity.setAlive(true);
         playerEntity.setVotedAgainst(0);
         playerEntity.setRole(Role.VILLAGER);
-        WerewolvesGameEntity werewolvesGameEntity = new WerewolvesGameEntity();
-        werewolvesGameEntity.setId("testGame");
-        werewolvesGameEntity.setStarted(false);
-        werewolvesGameEntity.setWinner(Role.WEREWOLF);
+        playerEntity.setGame(werewolvesGameEntity);
         werewolvesGameEntity.setPlayers(Collections.singletonList(playerEntity));
 
         // when
